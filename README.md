@@ -59,7 +59,12 @@ The rule range is meant to be used as follows:
 * 9,5XX,500 - 9,5XX,999 : Response Rules
 
 ## How does this IP-Management Plugin work?
+Example commands:
+```
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/add/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/remove/172.17.0.1
 
+```
 
 ## License
 
