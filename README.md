@@ -6,8 +6,8 @@ baseline CRS installation.
 
 This repository contains an IP-Management Plugin that provides:
  * Dynamic IP Tracking lists
- * TODO: Dynamic IP allow listing
- * TODO: Dynamic IP deny listing
+ * Dynamic IP allow listing
+ * Dynamic IP deny listing
 
 The CRS plugin documentation can be found on the [website](https://coreruleset.org/docs/configuring/plugins/).
 
@@ -63,6 +63,12 @@ Example commands:
 ```
 curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/add/172.17.0.1
 curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/remove/172.17.0.1
+
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/add/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/remove/172.17.0.1
+
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/add/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/remove/172.17.0.1
 
 ```
 
