@@ -47,12 +47,63 @@ curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localh
 curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/add/172.17.0.1
 curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/remove/172.17.0.1
 
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/drop/add/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/drop/remove/172.17.0.1
+
 curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/add/172.17.0.1
 curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/remove/172.17.0.1
+
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/engineoff/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/engineoff/172.17.0.1
 
 ```
 
 
+
+## IP-Management Plugin configuration
+The IP-Management plugin should be configured before use, by editing: plugins/ip-management-config.conf
+
+```
+SecAction \
+  "id:9500050,\
+   phase:1,\
+   nolog,\
+   pass,\
+   setvar:'tx.ipmanagement-plugin_enable-tracking=1',\
+   setvar:'tx.ipmanagement-plugin_enable-allow-listing=0',\
+   setvar:'tx.ipmanagement-plugin_enable-deny-listing=1',\
+   setvar:'tx.ipmanagement-plugin_enable-ruleengineoff-listing=0',\
+   setvar:'tx.ipmanagement-plugin_enable-drop-listing=1',\
+   setvar:'tx.ipmanagement-plugin_auth_ip=127.0.0.1',\
+   setvar:'tx.ipmanagement-plugin_auth_user_agent=asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y',\
+   setvar:'tx.ipmanagement-plugin_baseuri=/ip/management'"
+```
+
+Configure the base URI path that you want to use for IP-Management requests, by customising tx.ipmanagement-plugin_baseuri=/ip/management
+
+Configure the user-agent to be a secret to a long, random string. DO NOT use this with the default ipmanagement-plugin_auth_user_agent.
+On linux you can generate a long random string with the following command:
+```
+< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-100};echo;
+```
+
+Configure the authorised IP lists that can make IP management requests. By default this is set to 127.0.0.1 (localhost)
+
+Enable and/or Disable the specific lists by configuring the variables:
+   ipmanagement-plugin_enable-tracking
+   ipmanagement-plugin_enable-allow-listing
+   ipmanagement-plugin_enable-deny-listing
+   ipmanagement-plugin_enable-ruleengineoff-listing
+   ipmanagement-plugin_enable-drop-listing
+
+ 0 = disabled
+ 1 = enabled
+
+
+
+
+
+## OWASP Core Rule Set Plugin Structure
 The OWASP Core Rule Set (CRS) comes with a plugin structure that allows
 to add official and third-party plugins to work with the existing
 baseline CRS installation.
