@@ -1,13 +1,61 @@
 # OWASP ModSecurity Core Rule Set - IP-Management Plugin
 
+This repository contains an IP-Management Plugin that provides:
+ * Dynamic IP Tracking lists
+ * Dynamic IP deny listing
+ * Dynamic IP drop listing
+ * Dynamic IP allow listing (disabled by default)
+ * Dynamic IP engineoff listing (disabled by default)
+
+This plugin contains three files: 
+
+```
+plugins/ip-management-config.conf
+plugins/ip-management-before.conf
+plugins/ip-management-after.conf
+```
+
+## How does this IP-Management Plugin work?
+The IP Management plugin 
+
+All requests from IPs in monitoring list will be logged (even if they don't trigger
+other rules), whether request is allowed or not is not modified by plugin.
+All requests from IPs in deny list will be logged and denied.
+All request from IPs in drop list be silently dropped (no logging)
+All requests from IPs in allow list will be logged and allowed.
+All requests from IPs in RuleEngineOff list will have ModSec engine turned off (and 
+therefore be allowed)
+
+Rule ID block base: 9,500,000 (range is 1000, thus ID block base +1000)
+
+This plugin initialises the IP collection to be just the IP (not with appended
+   user-agent. This behaviour is essential for this plugin to work as expected.
+   Plugin must run before IP collection is initialised elsewhere (eg. CRS 901321)
+Changing IP collection from CRS 901321:
+     initcol:ip=%{remote_addr}_%{tx.ua_hash}
+   to:
+     initcol:ip=%{remote_addr}
+   means that CRS (and any other IP based rules), may have reduced granularity
+     as User-Agent will not be used to try and distinguish between multiple
+
+
+Example commands:
+```
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/add/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/remove/172.17.0.1
+
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/add/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/remove/172.17.0.1
+
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/add/172.17.0.1
+curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/remove/172.17.0.1
+
+```
+
+
 The OWASP Core Rule Set (CRS) comes with a plugin structure that allows
 to add official and third-party plugins to work with the existing
 baseline CRS installation.
-
-This repository contains an IP-Management Plugin that provides:
- * Dynamic IP Tracking lists
- * Dynamic IP allow listing
- * Dynamic IP deny listing
 
 The CRS plugin documentation can be found on the [website](https://coreruleset.org/docs/configuring/plugins/).
 
@@ -36,14 +84,6 @@ rules are loaded and then finally there is the third Include statement
 that loads all the files which follow the filename pattern *-after.conf
 from the plugins folder.
 
-This plugin contains three files: 
-
-```
-plugins/dummy-config.conf
-plugins/dummy-before.conf
-plugins/dummy-after.conf
-```
-
 ## What Rule IDs do the plugins have
 
 Each CRS plugin gets a range of 1,000 rule IDs, from 9,500,000 onwards.
@@ -58,22 +98,7 @@ The rule range is meant to be used as follows:
 * 9,5XX,100 - 9,5XX,499 : Request Rules
 * 9,5XX,500 - 9,5XX,999 : Response Rules
 
-## How does this IP-Management Plugin work?
-Example commands:
-```
-curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/add/172.17.0.1
-curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/track/remove/172.17.0.1
-
-curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/add/172.17.0.1
-curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/deny/remove/172.17.0.1
-
-curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/add/172.17.0.1
-curl -A 'asd9qh3nrkl1t9sdvtgbjamla3120ryg-zxnclwq8htkje8gdlqw983y' http://localhost/ip/management/allow/remove/172.17.0.1
-
-```
-
 ## License
-
 Copyright (c) 2021-2022 OWASP ModSecurity Core Rule Set project. All rights reserved.
 
 The OWASP ModSecurity Core Rule Set and its official plugins are
